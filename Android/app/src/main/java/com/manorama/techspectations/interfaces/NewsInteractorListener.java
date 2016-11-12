@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public interface NewsInteractorListener {
 
     void onGetBreakingNewsSuccess(ArrayList<BreakingNews> breakingNewsList);
+
     void onGetBreakingNewsFailed(int errorCode, String errorMsg);
 
 }

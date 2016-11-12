@@ -109,25 +109,5 @@ public class BreakingNews extends NewsHeader implements Parcelable {
         }
     };
 
-    public void setArticle(ManoramaArticle article){
 
-        setNewsId(article.getArticleID());
-        setNewsHeading(article.getTitle());
-        setNewsUrl(article.getArticleURL());
-        setNewsThumbnailUrl(article.getThumbnail());
-        setNewsWebImageUrl(article.getImgWeb());
-        setNewsMobileImageUrl(article.getImgMob());
-    }
-
-    public ManoramaArticle getArticle(){
-
-        ManoramaArticle article = new ManoramaArticle();
-        article.setArticleID(getNewsId());
-        article.setTitle(getNewsHeading());
-        article.setArticleURL(getNewsUrl());
-        article.setThumbnail(getNewsThumbnailUrl());
-        article.setImgWeb(getNewsWebImageUrl());
-        article.setImgMob(getNewsMobileImageUrl());
-        return article;
-    }
 }

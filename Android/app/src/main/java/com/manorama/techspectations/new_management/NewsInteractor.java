@@ -6,8 +6,11 @@ import android.util.Log;
 import com.cloudconnection.CloudAPICallback;
 import com.cloudconnection.CloudConnectHttpMethod;
 import com.google.gson.Gson;
+import com.manorama.techspectations.database.manager.DatabaseManager;
+import com.manorama.techspectations.database.tables.TableNews;
 import com.manorama.techspectations.interfaces.NewsInteractorListener;
 import com.manorama.techspectations.model.ArticleResponse;
+import com.manorama.techspectations.model.ManoramaArticle;
 import com.manorama.techspectations.util.Common;
 
 import org.json.JSONArray;
@@ -71,12 +74,21 @@ public class NewsInteractor {
 
                 Log.e(TAG, jsonObject.toString());
 
-                JSONArray newArray = jsonObject.optJSONArray("articles");
                 Gson gson = new Gson();
-                ArticleResponse article = gson.fromJson(jsonObject.toString(), ArticleResponse.class);
+                ArticleResponse articleList = gson.fromJson(jsonObject.toString(), ArticleResponse.class);
+                DatabaseManager dbManager = DatabaseManager.getInstance();
 
-               // Log.e(TAG, article.getArticleID());
+                if(articleList.articles != null && articleList.articles.size() > 0) {
 
+                    dbManager.clearArticle();
+                    for (ManoramaArticle article : articleList.articles) {
+
+                        dbManager.addOrUpdateArticle(article);
+                    }
+                    // Log.e(TAG, article.getArticleID());
+                }
+
+                mListener.onGetBreakingNewsSuccess(dbManager.getBreakingNews());
             }
 
             @Override
@@ -88,6 +100,7 @@ public class NewsInteractor {
             public void onFailure(int i, String s) {
 
                 Log.e(TAG, s);
+                mListener.onGetBreakingNewsFailed(i, s);
             }
         };
 

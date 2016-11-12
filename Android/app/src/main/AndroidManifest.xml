@@ -7,10 +7,12 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:name=".facebook.MyApplication"
@@ -22,26 +24,17 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
-        <meta-data
-            android:name="DATABASE"
-            android:value="techspectation.db" />
-        <meta-data
-            android:name="VERSION"
-            android:value="1" />
-        <meta-data
-            android:name="QUERY_LOG"
-            android:value="true" />
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="com.manorama.techspectations" />
 
-        <activity android:name=".ui.SplashScreenActivity"
-            >
-            <intent-filter>
+        <activity android:name=".ui.SplashScreenActivity">
+         <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ads.VideoViewActivity"
+                  android:theme="@style/Theme.AppCompat.Translucent">
+
         </activity>
         <activity android:name=".google.SignInActivity">
 
@@ -58,10 +51,40 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+
+        <receiver android:name=".util.ConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".ui.home.NewsActivity"
             android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ui.OfflineArticleActivity"
+            android:label="@string/title_activity_news"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <service android:name=".notification_management.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".notification_management.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
+        <provider
+            android:name=".database.DatabaseProvider"
+            android:authorities="com.manorama.techspectations.DataBaseProvider"
+            android:exported="true" />
     </application>
 
 </manifest>

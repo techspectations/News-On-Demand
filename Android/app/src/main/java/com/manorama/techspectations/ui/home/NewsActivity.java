@@ -7,21 +7,31 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.manorama.techspectations.R;
+import com.manorama.techspectations.database.manager.DatabaseManager;
+import com.manorama.techspectations.interfaces.OnUiUpdatedListener;
 import com.manorama.techspectations.model.News;
 import com.manorama.techspectations.ui.BaseActivity;
 import com.manorama.techspectations.ui.home.adapter.NewsSlidingPagerAdapter;
+import com.manorama.techspectations.util.Constants;
 
 import java.util.ArrayList;
 
-public class NewsActivity extends BaseActivity {
+public class NewsActivity extends BaseActivity implements OnUiUpdatedListener {
     ViewPager vpNewses;
     LinearLayout llLoading;
-    NewsSlidingPagerAdapter slidingPagerAdapter;
+    NewsSlidingPagerAdapter mSlidingPagerAdapter;
+    int position = -1;
+    String articleId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+
+        position = getIntent().getIntExtra(Constants.IntentConstants.NEWS_POSITION, -1);
+        articleId = getIntent().getStringExtra(Constants.IntentConstants.ARTICLE_ID);
+
+        processList();
     }
 
     @Override
@@ -33,11 +43,11 @@ public class NewsActivity extends BaseActivity {
     protected void initializeWidgets() {
         vpNewses = (ViewPager) findViewById(R.id.vp_newses);
         llLoading = (LinearLayout) findViewById(R.id.ll_loading);
-        slidingPagerAdapter = new NewsSlidingPagerAdapter(getSupportFragmentManager());
+        mSlidingPagerAdapter = new NewsSlidingPagerAdapter(getSupportFragmentManager());
 
-        vpNewses.setAdapter(slidingPagerAdapter);
-        slidingPagerAdapter.setNewses(getNewses());
-        if (slidingPagerAdapter.getCount() > 0) {
+        vpNewses.setAdapter(mSlidingPagerAdapter);
+        mSlidingPagerAdapter.setNewses(getNewses());
+        if (mSlidingPagerAdapter.getCount() > 0) {
             llLoading.setVisibility(View.GONE);
         } else {
             llLoading.setVisibility(View.VISIBLE);
@@ -49,8 +59,11 @@ public class NewsActivity extends BaseActivity {
 
     }
 
-    private void processNews() {
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setOnUiUpdatedListener(this);
+        updateNewsFromDatabase();
     }
 
     private ArrayList<News> getNewses() {
@@ -128,5 +141,36 @@ public class NewsActivity extends BaseActivity {
         newses.add(news);
         return newses;
 
+    }
+
+    @Override
+    public void onUiUpdated() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateNewsFromDatabase();
+            }
+        });
+    }
+
+    private void processList() {
+
+        ArrayList<News> newses = updateNewsFromDatabase();
+        if (articleId != null) {
+            for (int index = 0; index < newses.size(); index++) {
+                News news = newses.get(index);
+                if (news.getNewsArticleId().equals(articleId)) {
+                    vpNewses.setCurrentItem(index);
+                }
+            }
+        }
+    }
+
+    private ArrayList<News> updateNewsFromDatabase() {
+        ArrayList<News> newsFromDb = DatabaseManager.getInstance().getNews();
+//        ArrayList<BreakingNews> breakingNewses = new ArrayList<>(newsFromDb.subList(0, 10));
+
+        mSlidingPagerAdapter.setNewses(newsFromDb);
+        return newsFromDb;
     }
 }

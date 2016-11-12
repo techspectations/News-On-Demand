@@ -110,8 +110,45 @@ public class SignInInteractor {
         header.put("content-type", "application/json");
         TechSpectationPreference pref = TechSpectationPreference.getInstance();
 
-        long userId = pref.getLongPrefValue(Common.PreferenceStaticValues.USER_ID);
+        String userId = pref.getStringPrefValue(Common.PreferenceStaticValues.USER_ID);
         String url = Common.AppConstants.BASE_URL + "users/"+userId+"/likes";
+        httpMethod.setHeaderMap(header);
+        httpMethod.setEntityString(jArray.toString());
+        httpMethod.setUrl(url);
+        httpMethod.setRequestType(CloudConnectHttpMethod.POST_METHOD);
+        httpMethod.execute();
+    }
+
+
+    public void addUserEventsToServer(final JSONArray jArray){
+
+        CloudAPICallback apiCallback = new CloudAPICallback() {
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                //processResponseFromServer(jsonObject, use);
+                mListener.onAddLikesSuccess();
+            }
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+                mListener.onAddLikesFailed(i, s);
+            }
+        };
+
+        CloudConnectHttpMethod httpMethod = new CloudConnectHttpMethod(mContext, apiCallback);
+        HashMap<String, String> header = new HashMap<>();
+        header.put("accept", "application/json");
+        header.put("content-type", "application/json");
+        TechSpectationPreference pref = TechSpectationPreference.getInstance();
+
+        String userId = pref.getStringPrefValue(Common.PreferenceStaticValues.USER_ID);
+        String url = Common.AppConstants.BASE_URL + "travels";
         httpMethod.setHeaderMap(header);
         httpMethod.setEntityString(jArray.toString());
         httpMethod.setUrl(url);
@@ -121,15 +158,15 @@ public class SignInInteractor {
 
     private void processResponseFromServer(JSONObject jsonObject,UserModel model) {
 
-        if(jsonObject != null){
+        if (jsonObject != null) {
 
             TechSpectationPreference pref = TechSpectationPreference.getInstance();
             pref.setStringPrefValue(Common.PreferenceStaticValues.SERVER_TOKEN, jsonObject.optString("apiRequestToken"));
-            pref.setLongPrefValue(Common.PreferenceStaticValues.USER_ID, jsonObject.optInt("id"));
+            pref.setStringPrefValue(Common.PreferenceStaticValues.USER_ID, jsonObject.optString("id"));
             pref.setStringPrefValue(Common.PreferenceStaticValues.PROFILE_PIC_URL, model.getProfilePicUrl());
-            pref.setLongPrefValue(Common.PreferenceStaticValues.USER_ID,jsonObject.optInt("id"));
             pref.setStringPrefValue(Common.PreferenceStaticValues.USER_DISPLAY_NAME, jsonObject.optString("displayName"));
             pref.setStringPrefValue(Common.PreferenceStaticValues.USER_EMAIL, jsonObject.optString("emailAddress"));
+            pref.setBooleanPrefValue(Common.PreferenceStaticValues.USER_LOGGED_IN, true);
         }
     }
 }

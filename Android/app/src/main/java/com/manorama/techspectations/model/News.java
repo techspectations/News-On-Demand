@@ -16,10 +16,18 @@ public class News extends BreakingNews implements Parcelable {
     String newsReportedPlace = Constants.STRING_INITIALIZE_VALUE;
     String news = Constants.STRING_INITIALIZE_VALUE;
     String newsEditorName = Constants.STRING_INITIALIZE_VALUE;
+    String newsEditorEmail = Constants.STRING_INITIALIZE_VALUE;
+    String newsEditorImageUri = Constants.STRING_INITIALIZE_VALUE;
+    String newsEditorDesignation = Constants.STRING_INITIALIZE_VALUE;
+
     String newsReportedTime = Constants.STRING_INITIALIZE_VALUE;
+
+    int isOfflineSaved = Constants.INTEGER_INITIALIZE_VALUE;
+    String newsSection = Constants.STRING_INITIALIZE_VALUE;
 
     long totalViews = Constants.INTEGER_INITIALIZE_VALUE;
     ArrayList<String> tags = new ArrayList<>();
+    ArrayList<String> relatedArticles = new ArrayList<>();
 
     public String getNewsReportedPlace() {
         return newsReportedPlace;
@@ -69,6 +77,54 @@ public class News extends BreakingNews implements Parcelable {
         this.tags = tags;
     }
 
+    public String getNewsEditorEmail() {
+        return newsEditorEmail;
+    }
+
+    public void setNewsEditorEmail(String newsEditorEmail) {
+        this.newsEditorEmail = newsEditorEmail;
+    }
+
+    public String getNewsEditorImageUri() {
+        return newsEditorImageUri;
+    }
+
+    public void setNewsEditorImageUri(String newsEditorImageUri) {
+        this.newsEditorImageUri = newsEditorImageUri;
+    }
+
+    public String getNewsEditorDesignation() {
+        return newsEditorDesignation;
+    }
+
+    public void setNewsEditorDesignation(String newsEditorDesignation) {
+        this.newsEditorDesignation = newsEditorDesignation;
+    }
+
+    public int getIsOfflineSaved() {
+        return isOfflineSaved;
+    }
+
+    public void setIsOfflineSaved(int isOfflineSaved) {
+        this.isOfflineSaved = isOfflineSaved;
+    }
+
+    public String getNewsSection() {
+        return newsSection;
+    }
+
+    public void setNewsSection(String newsSection) {
+        this.newsSection = newsSection;
+    }
+
+    public ArrayList<String> getRelatedArticles() {
+        return relatedArticles;
+    }
+
+    public void setRelatedArticles(ArrayList<String> relatedArticles) {
+        this.relatedArticles = relatedArticles;
+    }
+
     public News() {
     }
 
@@ -78,12 +134,26 @@ public class News extends BreakingNews implements Parcelable {
         news = in.readString();
         newsEditorName = in.readString();
         newsReportedTime = in.readString();
+
+        newsEditorDesignation = in.readString();
+        newsEditorEmail = in.readString();
+        newsEditorImageUri = in.readString();
+        newsEditorName = in.readString();
+        newsSection = in.readString();
+        isOfflineSaved = in.readInt();
+
         totalViews = in.readLong();
         if (in.readByte() == 0x01) {
             tags = new ArrayList<String>();
             in.readList(tags, String.class.getClassLoader());
         } else {
             tags = null;
+        }
+        if (in.readByte() == 0x01) {
+            relatedArticles = new ArrayList<String>();
+            in.readList(relatedArticles, String.class.getClassLoader());
+        } else {
+            relatedArticles = null;
         }
     }
 
@@ -98,12 +168,26 @@ public class News extends BreakingNews implements Parcelable {
         dest.writeString(news);
         dest.writeString(newsEditorName);
         dest.writeString(newsReportedTime);
+
+        dest.writeString(newsEditorDesignation);
+        dest.writeString(newsEditorEmail);
+        dest.writeString(newsEditorImageUri);
+        dest.writeString(newsEditorName);
+        dest.writeString(newsSection);
+        dest.writeInt(isOfflineSaved);
+
         dest.writeLong(totalViews);
         if (tags == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(tags);
+        }
+        if (relatedArticles == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(relatedArticles);
         }
         super.writeToParcel(dest, flags);
     }

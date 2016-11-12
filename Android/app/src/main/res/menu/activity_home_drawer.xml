@@ -35,5 +35,12 @@
             android:icon="@drawable/ic_menu_login"
             android:title="@string/menu.name.signup" />
     </group>
-
+    <group
+        android:id="@+id/group_three"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_offlineArticle"
+            android:icon="@drawable/ic_menu_login"
+            android:title="@string/menu.name.offline_article" />
+    </group>
 </menu>

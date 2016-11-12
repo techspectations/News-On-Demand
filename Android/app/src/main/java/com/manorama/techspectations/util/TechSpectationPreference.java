@@ -13,6 +13,7 @@ public class TechSpectationPreference {
     private static final String SHARED_PREF_NAME = "MyPref";
 
     public static String USER_ID = "USER_ID";
+    public static String IS_USER_LOGGED = "IS_USER_LOGGED";
     public static String USER_NAME = "USER_NAME";
     public static String USER_DISPLAY_NAME = "USER_DISPLAY_NAME";
     public static String USER_PROFILE_PIC_URI = "USER_PROFILE_PIC_URI";

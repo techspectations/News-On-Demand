@@ -15,13 +15,27 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.manorama.techspectations.R;
+import com.manorama.techspectations.database.manager.DatabaseManager;
 import com.manorama.techspectations.interfaces.NewsInteractorListener;
 import com.manorama.techspectations.interfaces.OnRecyclerItemClickListener;
+import com.manorama.techspectations.interfaces.OnUiUpdatedListener;
+import com.manorama.techspectations.interfaces.SiginInteractorListener;
 import com.manorama.techspectations.model.BreakingNews;
+import com.manorama.techspectations.model.UserModel;
 import com.manorama.techspectations.new_management.NewsInteractor;
+import com.manorama.techspectations.notification_management.NotificationCloudInteractor;
 import com.manorama.techspectations.ui.BaseActivity;
 import com.manorama.techspectations.ui.home.adapter.BreakingNewsSlidingPagerAdapter;
 import com.manorama.techspectations.ui.home.adapter.NewsRecyclerAdapter;
+import com.manorama.techspectations.user_management.SignInInteractor;
+import com.manorama.techspectations.util.CalenderEvents;
+import com.manorama.techspectations.util.Common;
+import com.manorama.techspectations.util.Constants;
+import com.manorama.techspectations.util.TechSpectationPreference;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -29,7 +43,7 @@ import java.util.TimerTask;
 
 import me.relex.circleindicator.CircleIndicator;
 
-public class HomeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends BaseActivity implements SiginInteractorListener, NavigationView.OnNavigationItemSelectedListener, OnUiUpdatedListener {
 
     private static final String TAG = "HomeActivity";
     private static final int SECOND = 1000;
@@ -65,6 +79,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         menuController = new NavigationMenuController();
         navigationView = menuController.createHeaderForNavigationView(navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+        syncUserCalenderEvents();
+        new NotificationCloudInteractor(this).syncFcmToken();
     }
 
     @Override
@@ -89,15 +105,42 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         ciBreakingNews.setViewPager(vpBreakingNews);
         mSectionPagerAdapter.registerDataSetObserver(ciBreakingNews.getDataSetObserver());
 
-        mSectionPagerAdapter.setBreakingNewses(getDummyNews());
+//        mSectionPagerAdapter.setBreakingNewses(getDummyNews());
 
         mRecyclerAdapter = new NewsRecyclerAdapter();
         rvNewsList.setAdapter(mRecyclerAdapter);
 
-        mRecyclerAdapter.setBreakingNewses(getDummyNews());
+//        mRecyclerAdapter.setBreakingNewses(getDummyNews());
 
 
         toolbarTextAppernce();
+    }
+
+    private void syncUserCalenderEvents() {
+
+        ArrayList<String> eventNames = CalenderEvents.readCalendarEvent(this);
+
+        ArrayList<String> eventStartTime = CalenderEvents.startDates;
+        TechSpectationPreference pref = TechSpectationPreference.getInstance();
+        String userId = pref.getStringPrefValue(Common.PreferenceStaticValues.USER_ID);
+
+
+        JSONArray jArray = new JSONArray();
+        for (int i = 0; i < eventNames.size(); i++) {
+
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("id", 0);
+                jObject.put("userId", userId);
+                jObject.put("event", eventNames.get(i));
+                jObject.put("date", eventStartTime.get(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jArray.put(jObject);
+        }
+        proceessApiForEvents(jArray);
+
     }
 
     private void toolbarTextAppernce() {
@@ -110,7 +153,12 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         mRecyclerAdapter.setOnRecyclerItemClickListener(new OnRecyclerItemClickListener() {
             @Override
             public void onItemClicked(Object object, View view, int position) {
-                startActivity(new Intent(mContext, NewsActivity.class));
+                BreakingNews news = (BreakingNews) object;
+                String articleId = news.getNewsArticleId();
+                Intent intent = new Intent(mContext, NewsActivity.class);
+                intent.putExtra(Constants.IntentConstants.NEWS_POSITION, position);
+                intent.putExtra(Constants.IntentConstants.ARTICLE_ID, articleId);
+                startActivity(intent);
             }
 
             @Override
@@ -124,6 +172,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onResume() {
         super.onResume();
         startTimer();
+        setOnUiUpdatedListener(this);
+        updateNewsFromDatabase();
     }
 
     @Override
@@ -256,5 +306,47 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         newsInteractor.getAllNewBasedOnUserData();
 
         return newses;
+    }
+
+    private void proceessApiForEvents(JSONArray jArray) {
+        SignInInteractor interactor = new SignInInteractor(mContext, this);
+        interactor.addUserEventsToServer(jArray);
+    }
+
+    @Override
+    public void onSuccess(UserModel model) {
+
+    }
+
+    @Override
+    public void onFailure(int errorCode, String errorMsg) {
+
+    }
+
+    @Override
+    public void onAddLikesSuccess() {
+
+    }
+
+    @Override
+    public void onAddLikesFailed(int errorCode, String errorMsg) {
+
+    }
+
+    @Override
+    public void onUiUpdated() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateNewsFromDatabase();
+            }
+        });
+    }
+
+    private void updateNewsFromDatabase() {
+        ArrayList<BreakingNews> newsFromDb = DatabaseManager.getInstance().getBreakingNews();
+        ArrayList<BreakingNews> breakingNewses = new ArrayList<>(newsFromDb.subList(0, 10));
+        mSectionPagerAdapter.setBreakingNewses(breakingNewses);
+        mRecyclerAdapter.setBreakingNewses(newsFromDb);
     }
 }

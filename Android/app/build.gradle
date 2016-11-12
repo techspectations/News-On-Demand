@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "com.manorama.techspectations"
         minSdkVersion 17
@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        it.buildConfigField 'String', 'YOUTUBE_KEY', '"AIzaSyCKc21u0tmv0Wx8iTnzsLDqK9GUcgZAdJc"'
+
+    }
+
 }
 
 repositories {
@@ -35,6 +40,9 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'me.relex:circleindicator:1.2.2@aar'
     compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.facebook.stetho:stetho-urlconnection:1.3.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
+    compile 'com.facebook.stetho:stetho:1.3.1'
     compile 'com.facebook.fresco:fresco:0.6.1'
     compile 'com.android.support:palette-v7:23.1.1'
     compile 'com.github.satyan:sugar:1.4'
@@ -42,5 +50,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':cloudconnection')
+    compile 'com.google.firebase:firebase-messaging:9.8.0'
+    compile project(':YouTubeAndroidPlayerApi')
 }
 apply plugin: 'com.google.gms.google-services'

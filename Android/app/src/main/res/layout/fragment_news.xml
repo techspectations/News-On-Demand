@@ -17,9 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:statusBarScrim="@android:color/transparent"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:statusBarScrim="@android:color/transparent">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/sdv_news_thumbnail"
@@ -36,48 +36,53 @@
                 app:layout_collapseMode="pin" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-<android.support.v4.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <LinearLayout
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/tv_news_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent_black"
-            android:maxLines="3"
-            android:padding="20dp"
-            android:text="മലയാളം ആളുമ്പോൾ"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="20dp"
-                android:id="@+id/iv_provider_image"
-                android:layout_height="20dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <TextView
-                android:id="@+id/tv_news_updated_time"
+                android:id="@+id/tv_news_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:maxLines="1"
-                android:text="12-6-2016 Thursday"
-                android:textSize="10dp"
+                android:background="@color/transparent_black"
+                android:maxLines="3"
+                android:padding="20dp"
+                android:text="മലയാളം ആളുമ്പോൾ"
+                android:textColor="@color/white"
+                android:textSize="16dp"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/iv_provider_image"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+
+                <TextView
+                    android:id="@+id/tv_news_updated_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:maxLines="1"
+                    android:text="12-6-2016 Thursday"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_news_content"
                 android:layout_width="match_parent"
@@ -85,6 +90,32 @@
                 android:padding="10dp"
                 android:text="\u003cp\u003eപണ്ട് ഒരു വയോവൃദ്ധൻ അഞ്ചലാപ്പീസ് എവിടെയെന്നു ചോദിച്ചിട്ട് ആരും മറുപടി പറയാതെയായപ്പോൾ സഹികെട്ട് അദ്ദേഹം ചോദിച്ചുവത്രെ : പോസ്റ്റ് ഓഫിസ് എവിടെയാ?\u003c/p\u003e\u003cp\u003eഅപ്പോഴതാ വരുന്നു ഉടൻ പ്രതികരണം:\u003c/p\u003e\u003cp\u003e– അങ്ങനെ മലയാളത്തിൽ ചോദിക്ക് മൂപ്പിൽസേ !\u003c/p\u003e\u003cp\u003eഇങ്ങനെ പലപ്പോഴും ഇംഗ്ളിഷുമായുള്ള മൽപ്പിടിത്തത്തിൽ കുഴഞ്ഞുപോകുന്ന ശ്രേഷ്ഠഭാഷയ്ക്ക് ഈയാഴ്ച കഥക്കൂട്ടിന്റെ സമർപ്പണം.\u003c/p\u003e\u003cp\u003eമലയാളം കണ്ട ഏറ്റവും വലിയ പണ്ഡിതന്മാരിലൊരാളായ എ.ആർ. രാജരാജവർമയുടെ വിഖ്യാത വ്യാകരണഗ്രന്ഥത്തിന്റെ അവതാരിക അദ്ദേഹത്തിന്റെ ശിഷ്യനായ സാഹിത്യപഞ്ചാനൻ പി.കെ. നാരായണപിള്ളയെക്കൊണ്ടാണ് എഴുതിച്ചത്. അദ്ദേഹം പക്ഷേ അതെഴുതിയത് ഇംഗ്ളിഷിലാണ് !\u003c/p\u003e\u003cp\u003eആദ്യ ലോക മലയാള സമ്മേളനത്തിൽ ഇംഗ്ളിഷിൽ സ്വാഗതപ്രസംഗം നടത്തിയ വൈസ് ചാൻസലറെ കൂവലാണു സ്വീകരിച്ചത്. ബഹളം മൂത്തപ്പോൾ വൈസ് ചാൻസലർ പ്രസംഗം മലയാളത്തിലാക്കാൻ നോക്കി. അതിൽ പരാജയപ്പെട്ട അദ്ദേഹം പ്രസംഗം വീണ്ടും ഇംഗ്ളിഷിലാക്കിയപ്പോൾ കൂവൽ ഉച്ചസ്‌ഥായിയിലാവുകയും ചെയ്തു.\u003cbr\u003eആശംസാപ്രസംഗത്തിൽ മഹാകവി പി. പറഞ്ഞു:\u003c/p\u003e\u003cp\u003e– കോട്ടും സൂട്ടുമിട്ട് ഒരുത്തൻ ഇവിടെവന്ന് ഇംഗ്ളിഷിൽ എന്തൊക്കെയോ പറഞ്ഞല്ലോ. അയാളുടെ കരണത്തൊന്നു പൊട്ടിച്ചാൽ ‘എന്റമ്മേ’ എന്നു കരയുന്നതു കേൾക്കാം. അതാണ് അമ്മ. മാതൃഭാഷ. നമ്മുടെ മലയാളം.\u003c/p\u003e\u003cp\u003eമഹാകവി പി. കുഞ്ഞിരാമൻ നായരെപ്പോലെ ഒപ്പുപോലും മലയാളത്തിലാക്കിയവരായിരുന്നു ഇഎംഎസും പി.ടി. ഭാസ്കരപ്പണിക്കരുമൊക്കെ. മലയാളത്തിൽ ഒപ്പിട്ടതുകൊണ്ട് കേന്ദ്ര സാഹിത്യ അക്കാദമി പി. കുഞ്ഞിരാമൻ നായർക്കു പ്രതിഫലം നൽകാതിരുന്ന കഥ ഈ പംക്തിയിൽ നേരത്തെ പറഞ്ഞതാണ്.\u003c/p\u003e\u003cp\u003eഇംഗ്ളിഷ് അറിയില്ലാത്ത കാന്തലോട്ടു കുഞ്ഞമ്പു മന്ത്രിയായി വരികയും മന്ത്രിസഭായോഗത്തിനുള്ള കുറിപ്പുകൾ മലയാളത്തിൽ വേണമെന്നു നിർബന്ധിക്കുകയും ചെയ്‌തതുകൊണ്ടാണ് സെക്രട്ടേറിയറ്റിൽ ഇത്രയെങ്കിലും മലയാളം നിലനിൽക്കുന്നത്.\u003c/p\u003e\u003cp\u003eഇംഗ്ളിഷും സംസ്‌കൃതവും മലയാളവും ചേർന്ന ത്രിഭാഷാപദ്ധതിയായിരുന്നു പ്രഫ. പി.വി. ഉലഹന്നൻ മാപ്പിളയുടെ ക്ലാസുകളെന്നും മലയാളം ഇംഗ്ളിഷിൽ പഠിപ്പിച്ചിരുന്നയാളാണ് സി.ഐ രാമൻനായർ എന്നും കേട്ടിട്ടുണ്ട്.\u003c/p\u003e\u003cp\u003eകോട്ടയം സിഎംഎസ് കോളജിലെ മലയാളം വിഭാഗം മേധാവിയായിരുന്ന സി.ഐ. രാമൻനായരുടെ മകൻ ഡോ. സി.ആർ. സോമൻ തിരുവനന്തപുരം മെഡിക്കൽ കോളജിൽ പതിവുള്ള ക്ലാസ് എടുത്തുകൊണ്ടിരിക്കുമ്പോൾ ഒരു വിദ്യാർഥി എഴുന്നേറ്റു ചോദിച്ചു : സാറിനു വൈദ്യശാസ്‌ത്രം മലയാളത്തിൽ പഠിപ്പിക്കാൻ പറ്റുമോ?\u003cbr\u003e‘ഞങ്ങൾ വിദ്യാർഥികളെയെല്ലാം അത്ഭുതപ്പെടുത്തിക്കൊണ്ട് അദ്ദേഹം അടുത്തനിമിഷം മുതൽ ഇംഗ്ളിഷ് മാറ്റി നല്ല മലയാളത്തിൽ ക്ലാസ് തുടങ്ങി’ എന്ന് ഓർമിച്ചിട്ടുണ്ട് ഡോ. ബി. ഇക്‌ബാൽ.\u003c/p\u003e\u003cp\u003eനാലാം ക്ലാസ് വരെ മാത്രം മലയാളം എഴുത്തും വായനയും പഠിച്ച കെ. ബാലകൃഷ്‌ണനാണ് എഴുത്തിലും പ്രസംഗത്തിലും മലയാളത്തിന്റെ ചക്രവാളങ്ങൾ കീഴടക്കിയത്.\u003cbr\u003eഞായറാഴ്‌ചകളിൽ പള്ളിയിലെ ആരാധന ആദ്യമായി മലയാളത്തിലാക്കിയത് മാർത്തോമ്മാ സഭയാണ്. അതുവരെ ആരാധന പ്രധാനമായും സുറിയാനിയിലായിരുന്നു.\u003c/p\u003e\u003cp\u003eതിരുവിതാംകൂറിലെ ആദ്യത്തെ വൈസ്രോയിയായിരുന്ന കേണൽ മൺറോ ഉത്തരവുകൾ പുറപ്പെടുവിച്ചത് മലയാളത്തിലായിരുന്നുവെന്നുകൂടി ഈ ഓർമയോടു ചേർത്തു നമുക്കു മനസ്സിലെടുക്കാം.\u003c/p\u003e\u003cp\u003eകോഴിക്കോട്ട് വിദേശികളായ ഏതാനും കലക്‌ടർമാർ ഉണ്ടായിരുന്നെങ്കിലും സാധാരണക്കാരോടു സംസാരിക്കാൻ ഭാഷ തടസ്സമാവരുതെന്നു കരുതി അവരെല്ലാം മലയാളം പഠിച്ചു. ഡ്യൂമറിത് സായ്‌പ് മലയാളം പഠിക്കുക മാത്രമല്ല ഇന്ദുലേഖ ഇംഗ്ളിഷിലേക്കു പരിഭാഷപ്പെടുത്തുകകൂടി ചെയ്‌തു.\u003c/p\u003e\u003cp\u003eകേരള കലാമണ്ഡലം കൽപിത സർവകലാശാല മുൻ വൈസ് ചാൻസലറും ആറന്മുള വാസ്‌തുവിദ്യാ ഗുരുകുലം എക്സിക്യൂട്ടീവ് ഡയറക്ടറുമായ പി. എൻ. സുരേഷിന് പി.ജി. ടെൻസിങ്ങിനെക്കുറിച്ചുള്ളൊരു മലയാളസ്മൃതി പറഞ്ഞ് ഇതവസാനിപ്പിക്കാം. 1986 ബാച്ചിലെ കേരളാ കേഡർ ഐഎഎസ് ഓഫിസറും സിക്കിം സ്വദേശിയുമായ ടെൻസിങ് ഇരുപതു വർഷമാണു കേരളത്തെ സേവിച്ചത്. വോളന്ററി റിട്ടയർമെന്റ് എടുത്ത് നാട്ടിലേക്കു മടങ്ങിയ അദ്ദേഹം ഏതാനും വർഷം മുമ്പ് നിര്യാതനായി. കേരളത്തിലെ അദ്ദേഹത്തിന്റെ സർവീസിൽ ആദ്യകാലത്തു നടന്ന സംഭവം ടെൻസിങ്ങിനു മലയാളഭാഷയിൽ ഉണ്ടായിരുന്ന പ്രാവീണ്യത്തിനു തെളിവായി സുരേഷ് ഹാജരാക്കുന്നു.\u003c/p\u003e\u003cp\u003eഅടൂർ സബ് കലക്‌ടർ ഓഫിസിൽ 1989 നവംബറിലെ ഒരു പ്രവൃത്തിദിനമായിരുന്നു അത്. സബ് കലക്‌ടർ ടെൻസിങ്. ആ സബ് ഡിവിഷനിലെ വിനോദസഞ്ചാര സാധ്യതകളെക്കുറിച്ചു ചർച്ചചെയ്യാൻ പത്തുമണിയോടെ സുരേഷ് അദ്ദേഹത്തിന്റെ ചേംബറിലെത്തി. ചർച്ചയ്‌ക്കിടെ ഒരു റവന്യു ഉദ്യോഗസ്‌ഥൻ ചേംബറിലേക്കു പ്രവേശിച്ചു വിനയാന്വിതനായി നിന്നു.\u003c/p\u003e\u003cp\u003e‘‘നിങ്ങൾ ആരാണ്, എന്താണാവശ്യം?’’ സബ് കലക്‌ടർ ശുദ്ധമലയാളത്തിൽ ചോദിച്ചു.\u003c/p\u003e\u003cp\u003e‘‘സർ, ഞാൻ സ്‌പെഷൽ തഹസിൽദാർ. ചാർജെടുക്കുന്നതിനു മുൻപായി റിപ്പോർട്ട് ചെയ്യാൻ വന്നതാണ്.’’\u003c/p\u003e\u003cp\u003eഉദ്യോഗസ്‌ഥന്റെ വരവു പ്രതീക്ഷിച്ചപോലെ സബ് കലക്‌ടറുടെ പ്രതികരണം:\u003c/p\u003e\u003cp\u003e‘‘ഓ, ശരി, മനസ്സിലായി. എന്താണു പേര്?’’\u003c/p\u003e\u003cp\u003e‘‘സർ, ചെല്ലപ്പൻനായർ.’’ തഹസിൽദാർ മറുപടി പറഞ്ഞു.\u003c/p\u003e\u003cp\u003eചെറുചിരിയോടെ സബ് കലക്‌ടറുടെ മറുചോദ്യം:\u003c/p\u003e\u003cp\u003e‘‘അല്ലാത്തപ്പോളോ?’’\u003c/p\u003e\u003cp\u003eചോദ്യത്തിന്റെ സാരസ്യവും നർമവും പിടികിട്ടാതെ തഹസിൽദാർ ചോദ്യഭാവത്തിൽ: ‘‘സർ...?’’\u003c/p\u003e\u003cp\u003eടെൻസിങ് വിശദീകരിച്ചു: ‘‘നിങ്ങൾ ചെലപ്പം നായർ; അല്ലാത്തപ്പോളോ?’’\u003c/p\u003e\u003cp\u003eമലയാളിക്കുപോലും അത്ര എളുപ്പമല്ലാത്ത ഈ നർമവിശകലനം വെറും രണ്ടുവർഷത്തെ മലയാളപരിചയംകൊണ്ടാണ് അദ്ദേഹം സാധിച്ചതെന്നുകൂടി മനസ്സിലാക്കുമ്പോഴോ?\u003c/p\u003e\u003cp\u003e\u003ca href='com.mmnews://hypID0' target='_blank'\u003eവായിക്കാം, ഇ - വീക്ക് ലി\u003c/a\u003e \u003c/p\u003e" />
 
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|left"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/download"
+        app:backgroundTint="@color/colorPrimary"
+        app:elevation="4dp"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/feed_white_128"
+        app:backgroundTint="@color/colorPrimary"
+        app:elevation="4dp"
+        app:fabSize="normal"
+        app:layout_anchorGravity="bottom|right" />
 </android.support.design.widget.CoordinatorLayout>

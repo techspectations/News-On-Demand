@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,7 @@ import com.manorama.techspectations.R;
 import com.manorama.techspectations.model.News;
 import com.manorama.techspectations.ui.BaseFragment;
 import com.manorama.techspectations.util.Constants;
+import com.manorama.techspectations.util.DisplayInfo;
 import com.manorama.techspectations.util.Logger;
 
 /**
@@ -41,6 +43,7 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     CollapsingToolbarLayout ctl;
     Toolbar toolbar;
     SimpleDraweeView sdvThumbNail;
+    FloatingActionButton fabDownload, fabFollow;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -72,11 +75,16 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void initializeWidgets(View v) {
         ctl = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
+
+        fabDownload = (FloatingActionButton) v.findViewById(R.id.download);
+        fabFollow = (FloatingActionButton) v.findViewById(R.id.follow);
+
         toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         sdvThumbNail = (SimpleDraweeView) v.findViewById(R.id.sdv_news_thumbnail);
         toolbar.setTitle("മലയാളം ആളുമ്പോൾ");
         toolbar.setNavigationIcon(R.drawable.nav_back);
-        processImageRequest();toolbarTextAppernce();
+        processImageRequest();
+        toolbarTextAppernce();
     }
 
     private void toolbarTextAppernce() {
@@ -92,6 +100,8 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
                 getActivity().onBackPressed();
             }
         });
+        fabFollow.setOnClickListener(this);
+        fabDownload.setOnClickListener(this);
     }
 
     private void processImageRequest() {
@@ -114,6 +124,12 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
             case R.id.sdv_news_thumbnail:
                 Uri imageUri = Uri.parse(news.getNewsMobileImageUrl());
                 getBitmap(imageUri);
+                break;
+            case R.id.download:
+                DisplayInfo.showToast(getActivity(), getString(R.string.msg_downloading));
+                break;
+            case R.id.follow:
+                DisplayInfo.showToast(getActivity(), getString(R.string.msg_following));
                 break;
         }
     }

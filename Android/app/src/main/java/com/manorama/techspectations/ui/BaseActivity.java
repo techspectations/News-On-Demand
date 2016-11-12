@@ -1,6 +1,9 @@
 package com.manorama.techspectations.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,11 +21,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.manorama.techspectations.R;
+import com.manorama.techspectations.database.manager.DatabaseManager;
+import com.manorama.techspectations.interfaces.OnUiUpdatedListener;
+import com.manorama.techspectations.model.NewsHeader;
 import com.manorama.techspectations.util.AppUtils;
+import com.manorama.techspectations.util.Constants;
 import com.manorama.techspectations.util.Logger;
 import com.manorama.techspectations.util.views.DisplayUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -40,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity implements TextToSp
 
     TextView tvBreakingNews;
     ImageView ivSpeckNews;
+    OnUiUpdatedListener onUiUpdatedListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +105,28 @@ public abstract class BaseActivity extends AppCompatActivity implements TextToSp
 
     protected abstract void registerListeners();
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(uiUpdateReciever, new IntentFilter(Constants.IntentConstants.ACTION_DATA_UPDATED_BROADCAST));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(uiUpdateReciever);
+    }
+
+    BroadcastReceiver uiUpdateReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (onUiUpdatedListener != null) {
+                onUiUpdatedListener.onUiUpdated();
+                showBreakingNewsBottom();
+            }
+        }
+    };
+
     private void initializeObjects() {
         textToSpeech = new TextToSpeech(mContext, this);
         textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
@@ -129,6 +160,25 @@ public abstract class BaseActivity extends AppCompatActivity implements TextToSp
                 }
             }
         });
+    }
+
+    private void showBreakingNewsBottom() {
+        ArrayList<NewsHeader> newsHeaders = DatabaseManager.getInstance().getNewsHeaders();
+        if (newsHeaders.size() > 10) {
+            newsHeaders = new ArrayList<>(newsHeaders.subList(0, 10));
+        }
+        if (newsHeaders.size() > 0) {
+            StringBuilder builder = new StringBuilder();
+            for (NewsHeader header : newsHeaders) {
+                if (header.getNewsHeading() != null) {
+                    builder.append(header.getNewsHeading());
+                    builder.append(" | ");
+                }
+            }
+            if (builder.toString().length() > 0) {
+                tvBreakingNews.setText(builder.toString());
+            }
+        }
     }
 
     private void speakOut(boolean start) {
@@ -209,5 +259,13 @@ public abstract class BaseActivity extends AppCompatActivity implements TextToSp
                 e.printStackTrace();
             }
         }
+    }
+
+    public OnUiUpdatedListener getOnUiUpdatedListener() {
+        return onUiUpdatedListener;
+    }
+
+    public void setOnUiUpdatedListener(OnUiUpdatedListener onUiUpdatedListener) {
+        this.onUiUpdatedListener = onUiUpdatedListener;
     }
 }

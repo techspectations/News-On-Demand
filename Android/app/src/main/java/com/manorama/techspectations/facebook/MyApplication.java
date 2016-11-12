@@ -9,6 +9,8 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.stetho.Stetho;
+import com.manorama.techspectations.network_task.BackGroundNewsFetchService;
 import com.manorama.techspectations.util.CalenderEvents;
 
 import java.security.MessageDigest;
@@ -26,15 +28,17 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = this;
         Fresco.initialize(this);
+        Stetho.initializeWithDefaults(this);
         printHashKey();
+        BackGroundNewsFetchService.getInstance().startTimer();
         //syncUserCalenderEvents();
     }
 
     private void syncUserCalenderEvents() {
 
-        ArrayList<String> eventNames= CalenderEvents.readCalendarEvent(this);
+        ArrayList<String> eventNames = CalenderEvents.readCalendarEvent(this);
 
-        ArrayList<String> eventStartTime=CalenderEvents.startDates;
+        ArrayList<String> eventStartTime = CalenderEvents.startDates;
 
     }
 

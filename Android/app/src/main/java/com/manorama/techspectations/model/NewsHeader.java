@@ -10,18 +10,18 @@ import com.manorama.techspectations.util.Constants;
  */
 
 public class NewsHeader extends BaseModel implements Parcelable {
-    private String newsId = Constants.STRING_INITIALIZE_VALUE;
+    private long newsId = Constants.INTEGER_INITIALIZE_VALUE;
+    private String newsArticleId = Constants.STRING_INITIALIZE_VALUE;
     private String newsHeading = Constants.STRING_INITIALIZE_VALUE;
-
 
     public NewsHeader() {
     }
 
-    public String getNewsId() {
+    public long getNewsId() {
         return newsId;
     }
 
-    public void setNewsId(String newsId) {
+    public void setNewsId(long newsId) {
         this.newsId = newsId;
     }
 
@@ -33,10 +33,19 @@ public class NewsHeader extends BaseModel implements Parcelable {
         this.newsHeading = newsHeading;
     }
 
+    public String getNewsArticleId() {
+        return newsArticleId;
+    }
+
+    public void setNewsArticleId(String newsArticleId) {
+        this.newsArticleId = newsArticleId;
+    }
+
     protected NewsHeader(Parcel in) {
         super(in);
-        newsId = in.readString();
+        newsId = in.readLong();
         newsHeading = in.readString();
+        newsArticleId = in.readString();
     }
 
     @Override
@@ -46,8 +55,9 @@ public class NewsHeader extends BaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(newsId);
+        dest.writeLong(newsId);
         dest.writeString(newsHeading);
+        dest.writeString(newsArticleId);
         super.writeToParcel(dest, flags);
     }
 

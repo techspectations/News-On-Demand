@@ -9,8 +9,6 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.cloudconnection.CloudAPICallback;
+import com.cloudconnection.CloudConnectHttpMethod;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -62,9 +61,9 @@ import com.manorama.techspectations.model.UserModel;
 import com.manorama.techspectations.ui.home.HomeActivity;
 import com.manorama.techspectations.user_management.SignInInteractor;
 import com.manorama.techspectations.util.Common;
+import com.manorama.techspectations.util.DisplayInfo;
 import com.manorama.techspectations.util.MyNetworkUtility;
 import com.manorama.techspectations.util.TechSpectationPreference;
-import com.manorama.techspectations.util.views.DisplayUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,7 +76,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class SplashScreenActivity extends BaseActivity implements SiginInteractorListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener{
+public class SplashScreenActivity extends BaseActivity implements SiginInteractorListener, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     VideoView videoView;
     LinearLayout llIntro, llTitle;
     private CallbackManager callbackManager;
@@ -93,7 +92,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
     private GoogleApiClient mGoogleApiClient;
     public static final int RC_SIGN_IN = 1001;
     private ArrayList<String> mPermissions;
-    private static final int REQUEST_CODE=100;
+    private static final int REQUEST_CODE = 100;
 
     final String TAG = "SplashScreenActivity";
 
@@ -144,6 +143,23 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
         iv_google.bringToFront();
 
         tvSkip.setOnClickListener(this);
+
+        if(TechSpectationPreference.getInstance().getBooleanPrefValue(Common.PreferenceStaticValues.USER_LOGGED_IN)){
+
+            iv_facebook.setVisibility(View.INVISIBLE);
+            iv_google.setVisibility(View.INVISIBLE);
+            tvSkip.setVisibility(View.INVISIBLE);
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+
+                            goToHome();
+                        }
+                    },
+                    1000
+            );
+        }
     }
 
     @Override
@@ -226,7 +242,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
 
-        }else {
+        } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -250,11 +266,11 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
     protected void loadPermissions(ArrayList<String> mPermissions) {
 
         mPermissions = getUnGrantedPermissions(mPermissions);
-        if(mPermissions != null && mPermissions.size() > 0)
+        if (mPermissions != null && mPermissions.size() > 0)
             ActivityCompat.requestPermissions(this, mPermissions.toArray(new String[mPermissions.size()]), REQUEST_CODE);
     }
 
-    public void setPermissions(){
+    public void setPermissions() {
 
         mPermissions = new ArrayList<>();
         mPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -263,10 +279,10 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
         mPermissions.add(Manifest.permission.WRITE_CALENDAR);
     }
 
-    private ArrayList<String> getUnGrantedPermissions(ArrayList<String> mPermissions){
+    private ArrayList<String> getUnGrantedPermissions(ArrayList<String> mPermissions) {
 
-        ArrayList<String>  unGrantedPer = new ArrayList<>();
-        for(String perm : mPermissions) {
+        ArrayList<String> unGrantedPer = new ArrayList<>();
+        for (String perm : mPermissions) {
 
             if (ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
 
@@ -407,6 +423,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
             getLikedPageInfo(model.getSocialNetworkId());
         }else{
 
+            DisplayInfo.dismissLoader(this);
             Toast.makeText(mContext, "Sign In Success " + model.getDisplayName(), Toast.LENGTH_SHORT).show();
             goToHome();
         }
@@ -416,25 +433,26 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
     @Override
     public void onFailure(int errorCode, String errorMsg) {
 
-        Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.msg_signinFailed), Toast.LENGTH_SHORT).show();
+        goToHome();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_facebook:
-                DisplayUtils.showToast("Clicked facebook");
+//                DisplayUtils.showToast("Clicked facebook");
                 loginButton.performClick();
                 break;
             case R.id.iv_google:
-                if(MyNetworkUtility.checkInternetConnection(this)) {
+                if (MyNetworkUtility.checkInternetConnection(this)) {
                     signInUsingGoogleAccount();
-                }else{
+                } else {
                     Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.tv_skip:
-                DisplayUtils.showToast("Clicked skip");
+//                DisplayUtils.showToast("Clicked skip");
                 break;
         }
     }
@@ -454,10 +472,11 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.msg_signinFailed), Toast.LENGTH_SHORT).show();
+        goToHome();
     }
 
-    private void setUpGoogleSignUp(){
+    private void setUpGoogleSignUp() {
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -486,17 +505,26 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
             GoogleSignInAccount acct = result.getSignInAccount();
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //updateUI(true);
-            Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            postUserDataToServer(acct, person);
+            //postUserDataToServer(acct, person);
+
+            UserModel userModel = new UserModel();
+            userModel.setSocialNetworkName(Common.SocialNetworks.GOOGLE);
+            userModel.setSocialNetworkToken(Common.AppConstants.GOOGLE_API_KEY);
+            userModel.setSocialNetworkId(acct.getId());
+            userModel.setDisplayName(acct.getDisplayName());
+            userModel.setEmailAddress(acct.getEmail());
+            userModel.setLocation(getLocationName());
+
+            getPeopleDEtails(acct, userModel);
         } else {
             // Signed out, show unauthenticated UI.
             //updateUI(false);
-            Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_signinFailed), Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private String getLocationName(){
+    private String getLocationName() {
 
         String location = null;
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -525,7 +553,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
         }
         Location locations = locationManager.getLastKnownLocation(provider);
         List<String> providerList = locationManager.getAllProviders();
-        if(null!=locations && null!=providerList && providerList.size()>0) {
+        if (null != locations && null != providerList && providerList.size() > 0) {
             double longitude = locations.getLongitude();
             double latitude = locations.getLatitude();
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -537,7 +565,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
                 e.printStackTrace();
             }
 
-            if(addresses != null) {
+            if (addresses != null) {
                 location = addresses.get(0).getAddressLine(0) + ", " + addresses.get(0).getLocality()
                         + ", " + addresses.get(0).getSubAdminArea();
 
@@ -547,26 +575,53 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
         return location;
     }
 
-    private void postUserDataToServer(GoogleSignInAccount acct, Person person){
 
-        String url = person.getImage().getUrl();
-        UserModel userModel = new UserModel();
-        userModel.setSocialNetworkName(Common.SocialNetworks.GOOGLE);
-        userModel.setGender(person.getGender() == 0 ? "Male" : "Female");
-        userModel.setSocialNetworkToken(Common.AppConstants.GOOGLE_API_KEY);
-        userModel.setSocialNetworkId(acct.getId());
-        userModel.setDisplayName(acct.getDisplayName());
-        userModel.setEmailAddress(acct.getEmail());
-        userModel.setLocation(getLocationName());
+    private void postUserDataToServer(UserModel userModel){
 
         SignInInteractor interactor = new SignInInteractor(this, this);
         interactor.addUserDetailsToServer(userModel);
-
-        TechSpectationPreference.getInstance().setStringPrefValue(Common.PreferenceStaticValues.PROFILE_PIC_URL, url);
     }
 
-    private void goToHome(){
+    private void goToHome() {
 
         startActivity(new Intent(this, HomeActivity.class));
+    }
+
+    private void getPeopleDEtails(GoogleSignInAccount acct, final UserModel userModel){
+
+        CloudAPICallback callback = new CloudAPICallback() {
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+
+                userModel.setGender(jsonObject.optString("gender"));
+                JSONObject image = jsonObject.optJSONObject("image");
+                if(image != null)
+                    userModel.setProfilePicUrl(image.optString("url"));
+
+                postUserDataToServer(userModel);
+                Log.e("TAG", jsonObject.toString());
+            }
+
+            @Override
+            public void onSuccess(JSONArray jsonArray) {
+
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+                DisplayInfo.dismissLoader(SplashScreenActivity.this);
+                Log.e("TAG", "failed");
+            }
+        };
+
+        DisplayInfo.showLoader(this, getString(R.string.pd_please_wait));
+
+        CloudConnectHttpMethod httpMethod = new CloudConnectHttpMethod(this, callback);
+        String url = "https://www.googleapis.com/plus/v1/people/" + acct.getId() +"?key=AIzaSyDzk_BaX79yf-Ge76wVeBuEKg6PQLbX990";
+
+        httpMethod.setUrl(url);
+        httpMethod.setRequestType(CloudConnectHttpMethod.GET_METHOD);
+        httpMethod.execute();
     }
 }
