@@ -1,5 +1,6 @@
 # NEWS ON DEMAND
 =============================================================
+<li>Platform to follow Politicians, Sports men,  Bureaucrats, Celebrities<br></li>
 
 TEAM MEMBERS
 =============================================================
