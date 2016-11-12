@@ -1,6 +1,10 @@
-# NEWS ON DEMAND
+NEWS ON DEMAND
 =============================================================
 <li>Platform to follow Politicians, Sports men,  Bureaucrats, Celebrities<br></li>
+<li>Introducing Artificial Intelligence & Data mining into media<br></li>
+<li>Perfect news based on social media data, and to get data from social media<br></li>
+<li>Treasure current stories to next generation <br></li>
+
 
 TEAM MEMBERS
 =============================================================
