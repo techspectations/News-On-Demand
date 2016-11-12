@@ -4,16 +4,21 @@ package com.manorama.techspectations.ui.home;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
@@ -27,11 +32,16 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.manorama.techspectations.R;
+import com.manorama.techspectations.interfaces.NewsInteractorListener;
+import com.manorama.techspectations.model.BreakingNews;
 import com.manorama.techspectations.model.News;
+import com.manorama.techspectations.new_management.NewsInteractor;
 import com.manorama.techspectations.ui.BaseFragment;
 import com.manorama.techspectations.util.Constants;
 import com.manorama.techspectations.util.DisplayInfo;
 import com.manorama.techspectations.util.Logger;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +53,8 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
     CollapsingToolbarLayout ctl;
     Toolbar toolbar;
     SimpleDraweeView sdvThumbNail;
+    TextView tv_news_content;
+    TextView tv_news_header;
     FloatingActionButton fabDownload, fabFollow;
 
     public NewsFragment() {
@@ -70,6 +82,65 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initializeWidgets(view);
         registerListeners();
+//        if (news != null)
+//            getNewsDetailsFromServer(news.getNewsArticleId());
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (news != null)
+                        getNewsDetailsFromServer(news.getNewsArticleId());
+                }
+            }, 500);
+
+        }
+    }
+
+    private void getNewsDetailsFromServer(String newsArticleId) {
+
+        NewsInteractorListener listener = new NewsInteractorListener() {
+            @Override
+            public void onGetBreakingNewsSuccess(ArrayList<BreakingNews> breakingNewsList) {
+
+            }
+
+            @Override
+            public void onGetBreakingNewsFailed(int errorCode, String errorMsg) {
+
+            }
+
+            @Override
+            public void onGetNewsDetailSuccess(News newsDetails) {
+
+                DisplayInfo.dismissLoader(getActivity());
+                if (newsDetails != null) {
+
+                    NewsFragment.this.news = newsDetails;
+                    updateView();
+                }
+            }
+
+            @Override
+            public void onGetNewsDetailFailed(int errorCode, String errorMsg) {
+                DisplayInfo.dismissLoader(getActivity());
+                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        if (TextUtils.isEmpty(news.getNews())) {
+            DisplayInfo.showLoader(getActivity(), getString(R.string.pd_please_wait));
+            NewsInteractor interactor = new NewsInteractor(getActivity(), listener);
+            interactor.getDetailsOfNews(newsArticleId);
+        } else {
+
+            updateView();
+        }
     }
 
     @Override
@@ -78,13 +149,25 @@ public class NewsFragment extends BaseFragment implements View.OnClickListener {
 
         fabDownload = (FloatingActionButton) v.findViewById(R.id.download);
         fabFollow = (FloatingActionButton) v.findViewById(R.id.follow);
-
+        tv_news_content = (TextView) v.findViewById(R.id.tv_news_content);
         toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         sdvThumbNail = (SimpleDraweeView) v.findViewById(R.id.sdv_news_thumbnail);
-        toolbar.setTitle("മലയാളം ആളുമ്പോൾ");
+        tv_news_header = (TextView) v.findViewById(R.id.tv_news_header);
         toolbar.setNavigationIcon(R.drawable.nav_back);
         processImageRequest();
         toolbarTextAppernce();
+    }
+
+    private void updateView() {
+
+        if (toolbar != null)
+            toolbar.setTitle(news.getNewsHeading());
+        if (tv_news_content != null)
+            tv_news_content.setText(Html.fromHtml(news.getNews()));
+
+        if(tv_news_header != null)
+            tv_news_header.setText(news.getNewsHeading());
+
     }
 
     private void toolbarTextAppernce() {

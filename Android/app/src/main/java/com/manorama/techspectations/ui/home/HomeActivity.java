@@ -15,12 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.manorama.techspectations.R;
+import com.manorama.techspectations.ads.VideoViewActivity;
 import com.manorama.techspectations.database.manager.DatabaseManager;
 import com.manorama.techspectations.interfaces.NewsInteractorListener;
 import com.manorama.techspectations.interfaces.OnRecyclerItemClickListener;
 import com.manorama.techspectations.interfaces.OnUiUpdatedListener;
 import com.manorama.techspectations.interfaces.SiginInteractorListener;
 import com.manorama.techspectations.model.BreakingNews;
+import com.manorama.techspectations.model.News;
 import com.manorama.techspectations.model.UserModel;
 import com.manorama.techspectations.new_management.NewsInteractor;
 import com.manorama.techspectations.notification_management.NotificationCloudInteractor;
@@ -62,6 +64,18 @@ public class HomeActivity extends BaseActivity implements SiginInteractorListene
     NavigationMenuController menuController;
     CollapsingToolbarLayout ctl_home;
     NewsInteractor newsInteractor;
+
+    int count = 1;
+
+    public BreakingNews getCurrentNews() {
+        return currentNews;
+    }
+
+    public void setCurrentNews(News currentNews) {
+        this.currentNews = currentNews;
+    }
+
+    BreakingNews currentNews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,25 +212,36 @@ public class HomeActivity extends BaseActivity implements SiginInteractorListene
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        switch (id) {
+            case R.id.nav_travel:
+                startActivity(new Intent(mContext, FollowingListActivity.class));
+                break;
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void startTimer() {
+
         stopTimer();
         mTimer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+                count++;
                 changePage();
+                if (count % 9 == 0) {
+                    startActivity(new Intent(mContext, VideoViewActivity.class));
+                    count = 1;
+                }
             }
         };
         mTimer.schedule(task, 5 * SECOND, 5 * SECOND);
     }
 
     private void stopTimer() {
+        count = 1;
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;
@@ -238,75 +263,6 @@ public class HomeActivity extends BaseActivity implements SiginInteractorListene
         });
     }
 
-    private ArrayList<BreakingNews> getDummyNews() {
-        ArrayList<BreakingNews> newses = new ArrayList<>();
-//        BreakingNews news = new BreakingNews();
-//        news.setNewsHeading("Modi Banned 1000 and 500");
-//        news.setNewsMobileImageUrl("http://plusquotes.com/images/quotes-img/cool-pictures-24.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("US Election 2016: A survivor's guide to unexpected voting results");
-//        news.setNewsMobileImageUrl("https://newevolutiondesigns.com/images/freebies/cool-wallpaper-1.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("Brad Pitt 'abusive behaviour investigation closed'");
-//        news.setNewsMobileImageUrl("http://dukeo.com/media/low-quality-blog-content.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("Donald Trump election win sparks protests in US cities'");
-//        news.setNewsMobileImageUrl("http://dukeo.com/media/low-quality-blog-content.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("US Election 2016: A survivor's guide to unexpected voting results");
-//        news.setNewsMobileImageUrl("https://newevolutiondesigns.com/images/freebies/cool-wallpaper-1.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("Brad Pitt 'abusive behaviour investigation closed'");
-//        news.setNewsMobileImageUrl("http://dukeo.com/media/low-quality-blog-content.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("Donald Trump election win sparks protests in US cities'");
-//        news.setNewsMobileImageUrl("http://dukeo.com/media/low-quality-blog-content.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("US Election 2016: A survivor's guide to unexpected voting results");
-//        news.setNewsMobileImageUrl("https://newevolutiondesigns.com/images/freebies/cool-wallpaper-1.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("Brad Pitt 'abusive behaviour investigation closed'");
-//        news.setNewsMobileImageUrl("http://dukeo.com/media/low-quality-blog-content.jpg");
-//        newses.add(news);
-//
-//        news = new BreakingNews();
-//        news.setNewsHeading("Donald Trump election win sparks protests in US cities'");
-//        news.setNewsMobileImageUrl("http://dukeo.com/media/low-quality-blog-content.jpg");
-//        newses.add(news);
-
-        NewsInteractorListener listener = new NewsInteractorListener() {
-            @Override
-            public void onGetBreakingNewsSuccess(ArrayList<BreakingNews> breakingNewsList) {
-
-            }
-
-            @Override
-            public void onGetBreakingNewsFailed(int errorCode, String errorMsg) {
-
-            }
-        };
-
-        newsInteractor = new NewsInteractor(this, listener);
-        newsInteractor.getAllNewBasedOnUserData();
-
-        return newses;
-    }
 
     private void proceessApiForEvents(JSONArray jArray) {
         SignInInteractor interactor = new SignInInteractor(mContext, this);
@@ -345,7 +301,19 @@ public class HomeActivity extends BaseActivity implements SiginInteractorListene
 
     private void updateNewsFromDatabase() {
         ArrayList<BreakingNews> newsFromDb = DatabaseManager.getInstance().getBreakingNews();
-        ArrayList<BreakingNews> breakingNewses = new ArrayList<>(newsFromDb.subList(0, 10));
+        ArrayList<BreakingNews> breakingNewses;
+        if(newsFromDb.size() > 10){
+            breakingNewses = new ArrayList<>(newsFromDb.subList(0, 10));
+
+        }else{
+
+            breakingNewses = newsFromDb;
+        }
+
+        if(breakingNewses != null && breakingNewses.size() > 0){
+
+            currentNews = breakingNewses.get(0);
+        }
         mSectionPagerAdapter.setBreakingNewses(breakingNewses);
         mRecyclerAdapter.setBreakingNewses(newsFromDb);
     }

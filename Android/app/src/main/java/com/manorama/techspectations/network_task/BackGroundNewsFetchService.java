@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.manorama.techspectations.facebook.MyApplication;
 import com.manorama.techspectations.interfaces.NewsInteractorListener;
 import com.manorama.techspectations.model.BreakingNews;
+import com.manorama.techspectations.model.News;
 import com.manorama.techspectations.new_management.NewsInteractor;
 import com.manorama.techspectations.util.Constants;
 
@@ -35,7 +36,7 @@ public class BackGroundNewsFetchService implements NewsInteractorListener {
             @Override
             public void run() {
                 NewsInteractor interactor = new NewsInteractor(MyApplication.getAppContext(), BackGroundNewsFetchService.this);
-                interactor.getAllBreakingNews();
+                //interactor.getAllBreakingNews();
                 interactor.getAllNewBasedOnUserData();
             }
         };
@@ -58,6 +59,16 @@ public class BackGroundNewsFetchService implements NewsInteractorListener {
 
     @Override
     public void onGetBreakingNewsFailed(int errorCode, String errorMsg) {
+
+    }
+
+    @Override
+    public void onGetNewsDetailSuccess(News newsDetails) {
+
+    }
+
+    @Override
+    public void onGetNewsDetailFailed(int errorCode, String errorMsg) {
 
     }
 }

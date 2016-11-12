@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.manorama.techspectations.R;
-import com.manorama.techspectations.facebook.MyApplication;
 import com.manorama.techspectations.util.TechSpectationPreference;
 
 /**

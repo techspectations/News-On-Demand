@@ -1,6 +1,7 @@
 package com.manorama.techspectations.interfaces;
 
 import com.manorama.techspectations.model.BreakingNews;
+import com.manorama.techspectations.model.News;
 
 import java.util.ArrayList;
 
@@ -14,4 +15,6 @@ public interface NewsInteractorListener {
 
     void onGetBreakingNewsFailed(int errorCode, String errorMsg);
 
+    void onGetNewsDetailSuccess(News newsDetails);
+    void onGetNewsDetailFailed(int errorCode, String errorMsg);
 }

@@ -9,6 +9,8 @@ import com.manorama.techspectations.database.tables.TableNewsTagMapping;
 import com.manorama.techspectations.facebook.MyApplication;
 import com.manorama.techspectations.model.BreakingNews;
 import com.manorama.techspectations.model.ManoramaArticle;
+import com.manorama.techspectations.model.ManoramaArticleDetails;
+import com.manorama.techspectations.model.ManoramaAuthor;
 import com.manorama.techspectations.model.News;
 import com.manorama.techspectations.model.NewsHeader;
 
@@ -82,6 +84,26 @@ public class DatabaseManager extends DataBaseHelper {
         return breakingNewse;
     }
 
+    public void updateFollowing(String articleId) {
+        String where = TableNews.NEWS_ARTICLE_ID + "'" + articleId + "'";
+        ContentValues cv = new ContentValues();
+        cv.put(TableNews.NEWS_IS_OFFLINE, 1);
+        mContentResolver.update(TableNews.CONTENT_URI, cv, where, null);
+    }
+
+    public ArrayList<News> getSubscribedArticles() {
+        ArrayList<News> newses = new ArrayList<>();
+        String where = null;
+        Cursor cursor = mContentResolver.query(TableNews.CONTENT_URI, null, where, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                newses.add(getNewsFromCursor(cursor));
+            } while (cursor.moveToNext());
+        }
+        return newses;
+    }
+
     public ArrayList<News> getNews() {
         ArrayList<News> newses = new ArrayList<>();
         String where = null;
@@ -94,6 +116,7 @@ public class DatabaseManager extends DataBaseHelper {
         }
         return newses;
     }
+
     public ArrayList<NewsHeader> getNewsHeaders() {
         ArrayList<NewsHeader> newses = new ArrayList<>();
         String where = null;
@@ -108,7 +131,7 @@ public class DatabaseManager extends DataBaseHelper {
     }
 
     public News getNews(String articleId) {
-        String where = TableNews.NEWS_ARTICLE_ID + "'" + articleId + "'";
+        String where = TableNews.NEWS_ARTICLE_ID + " = '" + articleId + "'";
         News news = null;
         Cursor cursor = mContentResolver.query(TableNews.CONTENT_URI, null, where, null, null);
         if (cursor != null && cursor.getCount() > 0) {
@@ -150,10 +173,16 @@ public class DatabaseManager extends DataBaseHelper {
     }
 
     public void addOrUpdateArticle(ManoramaArticle article) {
-        addArticle(article);
+
+        if(isArticleExists(article.getArticleID())){
+
+            updateArticle(article);
+        }else
+             addArticle(article);
     }
 
     public void clearArticle() {
+
         mContentResolver.delete(TableNews.CONTENT_URI, null, null);
     }
 
@@ -165,14 +194,15 @@ public class DatabaseManager extends DataBaseHelper {
     }
 
     private void updateArticle(ManoramaArticle article) {
-        String where = TableNews.NEWS_ARTICLE_ID + " = " + article.getArticleID();
+
+        String where = TableNews.NEWS_ARTICLE_ID + " = '" + article.getArticleID() + "'";
         ContentValues cv = getContentValues(article);
         mContentResolver.update(TableNews.CONTENT_URI, cv, where, null);
     }
 
     private boolean isArticleExists(String articleId) {
 
-        String where = TableNews.NEWS_ARTICLE_ID + " = " + articleId;
+        String where = TableNews.NEWS_ARTICLE_ID + " = '" + articleId + "'";
         boolean exists = false;
 
         Cursor curs = mContentResolver.query(TableNews.CONTENT_URI, null, where, null, null);
@@ -219,5 +249,35 @@ public class DatabaseManager extends DataBaseHelper {
             } while (cursor.moveToNext());
         }
         return relatedArticles;
+    }
+
+    public void addArticleDetails(ManoramaArticleDetails details){
+
+        ContentValues cv = getContentValuesOfArticleDetails(details);
+        String where = TableNews.NEWS_ARTICLE_ID + " = '" + details.getArticleID() + "'";
+        mContentResolver.update(TableNews.CONTENT_URI, cv, where, null);
+    }
+
+    private ContentValues getContentValuesOfArticleDetails(ManoramaArticleDetails details){
+
+        ContentValues cv = new ContentValues();
+        //cv.put(TableNews.NEWS_ARTICLE_ID, details.getArticleID());
+        cv.put(TableNews.NEWS_HEADING, details.getTitle());
+        cv.put(TableNews.NEWS_ARTICLE_URI, details.getArticleURL());
+        cv.put(TableNews.NEWS_WEB_IMAGE_URI, details.getImgWeb());
+        cv.put(TableNews.NEWS_MOBILE_IMAGE_URI, details.getImgMob());
+        cv.put(TableNews.NEWS_THUMBNAIL_URI, details.getThumbnail());
+        cv.put(TableNews.NEWS_CONTENT, details.getContent());
+        cv.put(TableNews.NEWS_UPDATED_TIME, details.getLastModified());
+
+        ManoramaAuthor author = details.getAuthorDetails();
+
+        if(author != null) {
+            cv.put(TableNews.NEWS_AUTHOR, author.getAuthorname());
+            cv.put(TableNews.NEWS_AUTHOR_DESIGNATION, author.getAuthorDesignation());
+            cv.put(TableNews.NEWS_AUTHOR_EMAIL, author.getAuthoremail());
+            cv.put(TableNews.NEWS_AUTHOR_IMAGE_URI, author.getAuthorimage());
+        }
+        return cv;
     }
 }

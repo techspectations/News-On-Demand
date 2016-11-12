@@ -152,7 +152,6 @@ public class NewsActivity extends BaseActivity implements OnUiUpdatedListener {
             }
         });
     }
-
     private void processList() {
 
         ArrayList<News> newses = updateNewsFromDatabase();

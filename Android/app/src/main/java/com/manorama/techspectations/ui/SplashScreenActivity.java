@@ -54,7 +54,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 import com.manorama.techspectations.R;
 import com.manorama.techspectations.interfaces.SiginInteractorListener;
 import com.manorama.techspectations.model.UserModel;
@@ -144,7 +143,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
 
         tvSkip.setOnClickListener(this);
 
-        if(TechSpectationPreference.getInstance().getBooleanPrefValue(Common.PreferenceStaticValues.USER_LOGGED_IN)){
+        if (TechSpectationPreference.getInstance().getBooleanPrefValue(Common.PreferenceStaticValues.USER_LOGGED_IN)) {
 
             iv_facebook.setVisibility(View.INVISIBLE);
             iv_google.setVisibility(View.INVISIBLE);
@@ -230,7 +229,6 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
         anim.setFillAfter(true);
         anim.setInterpolator(new OvershootInterpolator());
         llTitle.startAnimation(anim);
-
     }
 
     @Override
@@ -421,7 +419,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
         if (model.getSocialNetworkName().equals(Common.SocialNetworks.FB)) {
 
             getLikedPageInfo(model.getSocialNetworkId());
-        }else{
+        } else {
 
             DisplayInfo.dismissLoader(this);
             Toast.makeText(mContext, "Sign In Success " + model.getDisplayName(), Toast.LENGTH_SHORT).show();
@@ -576,18 +574,21 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
     }
 
 
-    private void postUserDataToServer(UserModel userModel){
+    private void postUserDataToServer(UserModel userModel) {
 
         SignInInteractor interactor = new SignInInteractor(this, this);
         interactor.addUserDetailsToServer(userModel);
     }
 
     private void goToHome() {
-
-        startActivity(new Intent(this, HomeActivity.class));
+        Intent i = new Intent(this, HomeActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+        finish();
     }
 
-    private void getPeopleDEtails(GoogleSignInAccount acct, final UserModel userModel){
+    private void getPeopleDEtails(GoogleSignInAccount acct, final UserModel userModel) {
 
         CloudAPICallback callback = new CloudAPICallback() {
             @Override
@@ -595,7 +596,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
 
                 userModel.setGender(jsonObject.optString("gender"));
                 JSONObject image = jsonObject.optJSONObject("image");
-                if(image != null)
+                if (image != null)
                     userModel.setProfilePicUrl(image.optString("url"));
 
                 postUserDataToServer(userModel);
@@ -618,7 +619,7 @@ public class SplashScreenActivity extends BaseActivity implements SiginInteracto
         DisplayInfo.showLoader(this, getString(R.string.pd_please_wait));
 
         CloudConnectHttpMethod httpMethod = new CloudConnectHttpMethod(this, callback);
-        String url = "https://www.googleapis.com/plus/v1/people/" + acct.getId() +"?key=AIzaSyDzk_BaX79yf-Ge76wVeBuEKg6PQLbX990";
+        String url = "https://www.googleapis.com/plus/v1/people/" + acct.getId() + "?key=AIzaSyDzk_BaX79yf-Ge76wVeBuEKg6PQLbX990";
 
         httpMethod.setUrl(url);
         httpMethod.setRequestType(CloudConnectHttpMethod.GET_METHOD);
