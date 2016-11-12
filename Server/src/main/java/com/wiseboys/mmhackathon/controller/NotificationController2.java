@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wiseboys.mmhackathon.beans.StatusResponse;
+import com.wiseboys.mmhackathon.beans.UserNotification;
 import com.wiseboys.mmhackathon.beans.UserTravel;
 import com.wiseboys.mmhackathon.serviceimpl.NotificationServiceImpl;
 import com.wiseboys.mmhackathon.utils.Constants;
@@ -34,6 +35,7 @@ public class NotificationController2 {
 	
 	// Declaring API end points
 	private final static String POST_USER_TRAVEL_DETAILS = Constants.NEWS_API_BASE_PATH + "/travels";
+	private final static String POST_NOTIFICATION_DETAILS = Constants.NEWS_API_BASE_PATH + "/notifications";
 	
 	
 	/**
@@ -51,5 +53,17 @@ public class NotificationController2 {
 			return new StatusResponse(false);
 		}				
 	}	
+	
+	/**
+	 * Post all user Calender details. 
+	 * @return Status of the calender details post
+	 */
+	@RequestMapping(value=POST_NOTIFICATION_DETAILS, method = RequestMethod.POST, produces = Constants.RESPONSE_DATA_TYPE)
+	public @ResponseBody UserNotification postNotificationDetails(@RequestBody UserNotification notification){
+		System.out.println("postNotificationDetails");
+		return _notificationService.postNotificationDetails(notification);			
+	}
+	
+	
 	
 }

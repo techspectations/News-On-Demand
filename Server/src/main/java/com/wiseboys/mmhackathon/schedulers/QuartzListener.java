@@ -27,6 +27,9 @@ public class QuartzListener implements ServletContextListener {
 	
 	Scheduler scheduler = null;
 
+	/**
+	 * Start notification cron job 
+	 */
     @Override
     public void contextInitialized(ServletContextEvent servletContext) {
             System.out.println("Context Initialized");
@@ -39,7 +42,7 @@ public class QuartzListener implements ServletContextListener {
                     // Create a Trigger that fires every 5 minutes.
                     Trigger trigger =TriggerBuilder.newTrigger()
                     .withIdentity("TriggerName", "Group")
-                    .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?"))
+                    .withSchedule(CronScheduleBuilder.cronSchedule("0/60 * * * * ?"))
                     .build();
 
                     // Setup the Job and Trigger with Scheduler & schedule jobs
@@ -52,6 +55,9 @@ public class QuartzListener implements ServletContextListener {
             }
     }
 
+    /**
+	 * Stop notification cron job
+	 */
     @Override
     public void contextDestroyed(ServletContextEvent servletContext) {
             System.out.println("Context Destroyed");

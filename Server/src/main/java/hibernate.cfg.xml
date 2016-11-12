@@ -21,6 +21,7 @@
         <mapping class="com.wiseboys.mmhackathon.beans.ManoramaArticleDetails"></mapping>
         <mapping class="com.wiseboys.mmhackathon.beans.User"></mapping>
         <mapping class="com.wiseboys.mmhackathon.beans.UserLike"></mapping> 
-        <mapping class="com.wiseboys.mmhackathon.beans.UserTravel"></mapping>         
+        <mapping class="com.wiseboys.mmhackathon.beans.UserTravel"></mapping>        
+         <mapping class="com.wiseboys.mmhackathon.beans.UserNotification"></mapping>     
     </session-factory>
 </hibernate-configuration>

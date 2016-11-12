@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import org.codehaus.jackson.map.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wiseboys.mmhackathon.beans.StatusResponse;
 import com.wiseboys.mmhackathon.beans.User;
 import com.wiseboys.mmhackathon.beans.UserLike;
 import com.wiseboys.mmhackathon.serviceimpl.UserServiceImpl;
@@ -63,12 +63,12 @@ public class UserController {
 	 * @return true on success post
 	 */
 	@RequestMapping(value=POST_LIKES, method = RequestMethod.POST, produces = Constants.RESPONSE_DATA_TYPE, consumes = Constants.REQUEST_DATA_TYPE)
-	public @ResponseBody JSONPObject postUserLikes(@RequestBody UserLike[] likeRequest, @PathVariable BigInteger userId){
+	public @ResponseBody StatusResponse postUserLikes(@RequestBody UserLike[] likeRequest, @PathVariable BigInteger userId){
 		List<UserLike> userLikes = Arrays.asList(likeRequest);
 		if(_userService.addUserLikes(userLikes, userId)) {
-			return new JSONPObject("status", true);
+			return new StatusResponse(true);
 		} else {
-			return new JSONPObject("status", false);
+			return new StatusResponse(false);
 		}
 	}
 	
