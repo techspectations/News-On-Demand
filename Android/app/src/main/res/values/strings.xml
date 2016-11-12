@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">NewsOnDemand</string>
+    <string name="action_settings">Settings</string>
+    <string name="app_id">1169600253121860</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="menu.name.top_stories">Top stories</string>
+    <string name="menu.name.articles">Articles</string>
+    <string name="menu.name.travel">Collections</string>
+    <string name="menu.name.settings">Settings</string>
+    <string name="menu.name.signin">Signin</string>
+    <string name="menu.name.signup">Signup</string>
+
+
+    <string name="message.sample_breaking_news">"We are now all rooting for his success in uniting and leading our country" - President Obama on Donald Trump\'s win    |
+    "I hope he will be a successful President for all Americans" - @HillaryClinton makes her concession speech    |    Hillary Clinton, defeated presidential candidate, says President-elect Donald Trump must have chance to lead</string>
+    <string name="message.sample_news">The opposition parties and BJP </string>
+    <string name="message.loading">Loading</string>
+    <!--
+    <string name="message.sample_news">The opposition parties and BJP today sparred over the Centre's ban on high denomination notes with BSP chief Mayawati calling the action imposition of "undeclared economic emergency" and the ruling party asserting it was a fight against black money.\nThe opposition parties&#45;&#45;SP, BSP and AAP&#45;&#45;also questioned the timing of the move, claiming it was linked to the upcoming Assembly elections in Uttar Pradesh.\nThe Trinamool Congress gave a notice in the Rajya Sabha to suspend business on the opening day of Winter Session of Parliament on November 16 to discuss the demonetisation of Rs 1,000 and Rs 500 currency notes, saying it was inconveniencing the poor.\nDelhi Chief Minister Arvind Kejriwal alleged that BJP and its "friends" were informed about the demonetisation of high value currency "a week before" the move was effected, especially keeping the UP polls in mind.</string>
+-->
+
+
+    <string name="warning.low_volume">Current media volume is very low. Please increase volume to hear news.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_news">NewsActivity</string>
+    <string name="no_internet_connection">The application was unable to connect to network. Please establish a network connection.</string>
+
+</resources>

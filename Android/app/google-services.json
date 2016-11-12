@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "929647381680",
+    "firebase_url": "https://techspectations-149009.firebaseio.com",
+    "project_id": "techspectations-149009",
+    "storage_bucket": "techspectations-149009.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929647381680:android:df3482587d4eed0b",
+        "android_client_info": {
+          "package_name": "com.manorama.techspectations"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929647381680-sub06vbttjg6bedr71fv9r2h9d9iuaj9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manorama.techspectations",
+            "certificate_hash": "1E668403F03432BA8BCF25A942AB0EBEEFC8419C"
+          }
+        },
+        {
+          "client_id": "929647381680-7rptvfknr03njcebi6gn2goe5oh23kdg.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "929647381680-05o7eufi3d2tuod2ma63m7aj3b69cnpv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzk_BaX79yf-Ge76wVeBuEKg6PQLbX990"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929647381680-7rptvfknr03njcebi6gn2goe5oh23kdg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

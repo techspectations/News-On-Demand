@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_news"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.manorama.techspectations.ui.home.NewsActivity"
+    tools:showIn="@layout/activity_news">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_newses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/ll_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <android.support.v4.widget.ContentLoadingProgressBar
+            android:id="@+id/tv_news_header"
+            style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="20dp" />
+
+        <TextView
+            android:id="@+id/tv_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message.loading"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</RelativeLayout>
